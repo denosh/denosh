@@ -16,7 +16,7 @@ export async function getConfig(): Promise<ConfigStructure> {
   console.log(await import(path.resolve('./.denoshrc.ts')))
   Deno.chdir(Deno.cwd())
   if (existsSync(path.resolve('./.denoshrc.ts'))) {
-    config = await import(path.resolve('./.denoshrc.ts'))
+    config = await import('file://' + path.resolve('./.denoshrc.ts'))
   }
   return config
 }
