@@ -10,14 +10,13 @@ export const logger = new Logger()
 
 export async function getConfig(): Promise<ConfigStructure> {
   // @ts-ignore
-  let config = {}
-  console.log(path.resolve('./.denoshrc.ts'))
-  console.log(path.resolve('./.denoshrc.ts'))
-  console.log(await import(path.resolve('./.denoshrc.ts')))
-  Deno.chdir(Deno.cwd())
-  if (existsSync(path.resolve('./.denoshrc.ts'))) {
-    config = await import('file://' + path.resolve('./.denoshrc.ts'))
+  let config = {
+    commandDir: 'src/commands'
   }
+  // Deno.chdir(Deno.cwd())
+  // if (existsSync(path.resolve('./.denoshrc.ts'))) {
+  //   config = await import('file://' + path.resolve('./.denoshrc.ts'))
+  // }
   return config
 }
 
