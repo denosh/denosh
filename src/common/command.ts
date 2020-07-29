@@ -4,6 +4,8 @@ import { CommandsStructure } from './interface.ts'
 import { OptionManger } from './option.ts'
 import * as Utils from './utils.ts'
 
+import * as generateCommand from '../commands/generate.ts'
+
 export function showVersion() {
   Utils.logger.info(Utils.VERSION)
 }
@@ -40,10 +42,6 @@ export async function loadCoreCommands(): Promise<CommandsStructure> {
   const __dirname = path.dirname(path.fromFileUrl(import.meta.url))
 
   // Loaded all commands
-  const commandsDir: string = path.resolve(__dirname, '../commands')
-  console.log('__dirname', __dirname)
-  console.log('core commandsDir', commandsDir)
-  const scannedCommands = []
   const loadedCommands: CommandsStructure = {}
   loadedCommands.version = {
     name: 'version',
@@ -53,16 +51,8 @@ export async function loadCoreCommands(): Promise<CommandsStructure> {
     name: 'help',
     desc: 'Show help',
   }
-  for (let entry of Deno.readDirSync(commandsDir)) {
-    if (entry.isFile && path.extname(entry.name) == '.ts') {
-      scannedCommands.push(entry)
-    }
-  }
 
-  for (let entry of scannedCommands) {
-    const command = await import(path.resolve(commandsDir, entry.name))
-    loadedCommands[path.basename(entry.name, '.ts')] = command
-  }
+  loadedCommands.generate = generateCommand
 
   return loadedCommands
 }
