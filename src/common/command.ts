@@ -1,10 +1,16 @@
 import * as path from "https://deno.land/std/path/mod.ts"
 import { parse } from "https://deno.land/std/flags/mod.ts"
-import { CommandsStructure, LaunchOptionStructure } from './interface.ts'
+import { CommandsStructure, LaunchOptionStructure, CommandStructure } from './interface.ts'
 import { OptionManger } from './option.ts'
 import * as Utils from './utils.ts'
 
 import * as generateCommand from '../commands/generate.ts'
+
+const commands: CommandsStructure = {}
+
+export function registerCommand(commandName: string, command: CommandStructure) {
+  commands[commandName] = command
+}
 
 export async function launch(args: string[], opts: LaunchOptionStructure = {}) {
   // Process options
@@ -53,29 +59,9 @@ export function showVersion() {
 }
 
 export async function loadExtraCommands(loadedCommands: CommandsStructure, opts: LaunchOptionStructure) {
-  if (!opts.commandDir) {
-    return
-  }
-
-  const __dirname = path.dirname(path.fromFileUrl(import.meta.url))
-  const coreCommandsDir: string = path.resolve(__dirname, '../commands')
-  const commandsDir: string = path.resolve(Deno.cwd(), opts.commandDir)
-
-  if (coreCommandsDir === commandsDir) {
-    return
-  }
-
-  const scannedCommands = []
-  for (let entry of Deno.readDirSync(commandsDir)) {
-    if (entry.isFile && path.extname(entry.name) == '.ts') {
-      scannedCommands.push(entry)
-    }
-  }
-
-  for (let entry of scannedCommands) {
-    const command = await import(path.resolve(commandsDir, entry.name))
-    loadedCommands[path.basename(entry.name, '.ts')] = command
-  }
+  Object.keys(commands).forEach(command => {
+    loadedCommands[command] = commands[command]
+  })
 }
 
 export async function loadCoreCommands(): Promise<CommandsStructure> {
