@@ -11,6 +11,8 @@ export const logger = new Logger()
 export async function getConfig(): Promise<ConfigStructure> {
   // @ts-ignore
   let config = {}
+  console.log(path.resolve('./.denoshrc.ts'))
+  // console.log([...Deno.readDirSync(new URL(".", import.meta.url))])
   if (existsSync(path.resolve(Deno.cwd(), './.denoshrc.ts'))) {
     config = await import(path.resolve(Deno.cwd(), './.denoshrc.ts'))
   }
