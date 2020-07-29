@@ -12,7 +12,7 @@ export async function getConfig(): Promise<ConfigStructure> {
   // @ts-ignore
   let config = {}
   if (existsSync(path.resolve('./.denoshrc.ts'))) {
-    config = await import(path.resolve(Deno.cwd(), './.denoshrc.ts'))
+    config = await import(path.resolve('./.denoshrc.ts'))
   }
   return config
 }
