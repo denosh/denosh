@@ -20,10 +20,12 @@ deno install --unstable --allow-read --allow-write -f -n denosh https://raw.gith
 ```js
 import { launch } from 'https://raw.githubusercontent.com/denosh/denosh/master/mod.ts'
 
-launch(Deno.args, {
-  scriptName: 'Your script name',
-  commandDir: 'Command directory'
-})
+if (import.meta.main) {
+  launch(Deno.args, {
+    scriptName: 'Your script name',
+    commandDir: 'Command directory'
+  })
+}
 ```
 
 ## Command structure
