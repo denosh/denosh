@@ -5,12 +5,11 @@ Denosh is a command line tool solution for Deno.
 ## Installation
 
 ```bash
-deno install --unstable --allow-read --allow-write -f -n denosh https://raw.githubusercontent.com/denosh/denosh/master/denosh.ts
+deno install --allow-read --allow-write -f -n denosh https://raw.githubusercontent.com/denosh/denosh/master/denosh.ts
 ```
 
 ***Cation: If you choose to use this way, you can just use bulltin commands, and it's not that useful** 
 
-* `--unstable` is because that I use `std/fs` mod.
 * `--allow-read` and `--allow-write`, this is the default permission needed, if your commands use more permission, you can add here, or just use `-A`.
 * `-f` means override last install.
 * `-n denosh` is for naming the installed executable binary.
