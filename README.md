@@ -8,6 +8,8 @@ Denosh is a command line tool solution for Deno.
 deno install --unstable --allow-read --allow-write -f -n denosh https://raw.githubusercontent.com/denosh/denosh/master/denosh.ts
 ```
 
+***Cation: If you choose to use this way, you can just use bulltin commands, and it's not that useful** 
+
 * `--unstable` is because that I use `std/fs` mod.
 * `--allow-read` and `--allow-write`, this is the default permission needed, if your commands use more permission, you can add here, or just use `-A`.
 * `-f` means override last install.
@@ -16,10 +18,29 @@ deno install --unstable --allow-read --allow-write -f -n denosh https://raw.gith
 ## As a mod
 
 ```js
-import { OptionMangerInterface } from 'https://raw.githubusercontent.com/denosh/denosh/master/mod.ts'
+import { launch } from 'https://raw.githubusercontent.com/denosh/denosh/master/mod.ts'
+
+launch(Deno.args, {
+  scriptName: 'Your script name',
+  commandDir: 'Command directory'
+})
 ```
 
-Tips: If you use this as mod, you should add `--allow-net` when installing
+## Command structure
+
+```js
+export const name = 'test'
+export const desc = 'test'
+export const aliases = ''
+
+export const builder = (option: any) => {
+  Option.set('opt1', { desc: 'opt1 desc', default: 'val1', alias: 'o1'})
+}
+
+export const handler = async (argv: any) => {
+  console.log('Hello world!')
+}
+```
 
 ## License
 
