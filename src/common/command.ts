@@ -11,7 +11,6 @@ export function showVersion() {
 export async function loadExtraCommands(loadedCommands: CommandsStructure) {
   const config = await Utils.getConfig()
 
-  console.log('config', config)
   if (!config.commandDir) {
     return
   }
@@ -19,9 +18,6 @@ export async function loadExtraCommands(loadedCommands: CommandsStructure) {
   const __dirname = path.dirname(path.fromFileUrl(import.meta.url))
   const coreCommandsDir: string = path.resolve(__dirname, '../commands')
   const commandsDir: string = path.resolve(Deno.cwd(), config.commandDir)
-
-  console.log('coreCommandsDir', coreCommandsDir)
-  console.log('commandsDir', commandsDir)
 
   if (coreCommandsDir === commandsDir) {
     return
@@ -45,6 +41,8 @@ export async function loadCoreCommands(): Promise<CommandsStructure> {
 
   // Loaded all commands
   const commandsDir: string = path.resolve(__dirname, '../commands')
+  console.log('__dirname', __dirname)
+  console.log('core commandsDir', commandsDir)
   const scannedCommands = []
   const loadedCommands: CommandsStructure = {}
   loadedCommands.version = {
