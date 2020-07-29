@@ -16,13 +16,11 @@ export const builder = (option: OptionMangerInterface) => {}
 export const handler = async (argv: Argv) => {
   argv.desc = argv.desc || argv.name
 
-  const code = `import { OptionMangerInterface } from '../common/interface.ts'
-
-export const name = '${argv.name}'
+  const code = `export const name = '${argv.name}'
 export const desc = '${argv.desc}'
 export const aliases = ''
 
-export const builder = (option: OptionMangerInterface) => {}
+export const builder = (option: any) => {}
 
 export const handler = async (argv: any) => {
   console.log('Hello world!')

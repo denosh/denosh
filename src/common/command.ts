@@ -39,8 +39,6 @@ export async function loadExtraCommands(loadedCommands: CommandsStructure) {
 }
 
 export async function loadCoreCommands(): Promise<CommandsStructure> {
-  const __dirname = path.dirname(path.fromFileUrl(import.meta.url))
-
   // Loaded all commands
   const loadedCommands: CommandsStructure = {}
   loadedCommands.version = {
@@ -61,59 +59,65 @@ export function showHelp(commandName: string, loadedCommands : CommandsStructure
   const scriptName = 'denosh'
   if (commandName === 'help') {
 
-    Utils.logger.info(`${scriptName} [command]`);
+    Utils.logger.info(`${scriptName} [command]`)
     
     if (Object.keys(loadedCommands).length > 0) {
-      console.log();
-      Utils.logger.info('Commands:');
+      console.log()
+      Utils.logger.info('Commands:')
       Object.keys(loadedCommands).forEach(commandName => {
-        const command = loadedCommands[commandName];
-        let commandText = `  ${scriptName} ${command.name}`;
+        const command = loadedCommands[commandName]
+        let commandText = `  ${scriptName} ${command.name}`
         if (command.desc) {
-          commandText = commandText.padEnd(40, ' ') + command.desc;
+          commandText = commandText.padEnd(40, ' ') + command.desc
         }
-        Utils.logger.info(commandText);
-      });
+        Utils.logger.info(commandText)
+      })
     }
 
-    console.log();
-    Utils.logger.info('Options:');
-    Utils.logger.info('  -h, --help: Show help');
-    Utils.logger.info('  -v, --version: Show version');
+    console.log()
+    Utils.logger.info('Options:')
+    Utils.logger.info('  -h, --help: Show help')
+    Utils.logger.info('  -v, --version: Show version')
 
   }
   else {
     if (loadedCommands[commandName]) {
-      const command = loadedCommands[commandName];
+      const command = loadedCommands[commandName]
 
-      Utils.logger.info(command.name);
-      console.log();
-      Utils.logger.info(command.desc);
-      console.log();
-      Utils.logger.info('Options:');
+      Utils.logger.info(command.name)
+      console.log()
+      Utils.logger.info(command.desc)
 
-      const optionManger = new OptionManger();
-      command.builder && command.builder(optionManger);
-      optionManger.keys().forEach(key => {
-        const option = optionManger.get(key);
-        const options = [key];
-        if (option.alias) {
-          options.push(option.alias);
-        }
+      const optionManger = new OptionManger()
+      command.builder && command.builder(optionManger)
 
-        const optionsText = options.map((o) => {
-          if (o.length > 1) {
-            return '--' + o;
+      if (optionManger.keys().length > 0) {
+        console.log()
+        Utils.logger.info('Options:')
+
+        
+        optionManger.keys().forEach(key => {
+          const option = optionManger.get(key)
+          const options = [key]
+          if (option.alias) {
+            options.push(option.alias)
           }
-          return '-' + o;
-        }).join(', ');
 
-        Utils.logger.info('  ' + optionsText.padEnd(20, ' ') + option.desc);
-      });
+          const optionsText = options.map((o) => {
+            if (o.length > 1) {
+              return '--' + o
+            }
+            return '-' + o
+          }).join(', ')
+
+          Utils.logger.info('  ' + optionsText.padEnd(20, ' ') + option.desc)
+        })
+      }
+      
     }
     else {
-      Utils.logger.error('Command not found');
-      Deno.exit(1);
+      Utils.logger.error('Command not found')
+      Deno.exit(1)
     }
   }
 }

@@ -18,9 +18,8 @@ export async function getConfig(): Promise<ConfigStructure> {
 }
 
 export const parseCommandName = (commandName: string, target: string) => {
-  commandName = commandName.replace(/\s{2,}/, ' ')
-  target = target.replace(/\s{2,}/, ' ')
-
+  commandName = commandName.replace(/\s{2,}/g, ' ')
+  target = target.replace(/\s{2,}/g, ' ')
   const commandNamePattern = commandName
     .replace(' <', '(?<').replace('>', '> \\w+)?')
     .replace(' [', '(?<').replace(']', '> \\w+)?')
