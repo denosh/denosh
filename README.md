@@ -18,7 +18,10 @@ deno install --unstable --allow-read --allow-write -f -n denosh https://raw.gith
 ## As a mod
 
 ```js
-import { launch } from 'https://raw.githubusercontent.com/denosh/denosh/master/mod.ts'
+import { launch, registerCommand } from 'https://raw.githubusercontent.com/denosh/denosh/master/mod.ts'
+
+import * as test1Command from './src/commands/test1.ts'
+import * as test2Command from './src/commands/test2.ts'
 
 if (import.meta.main) {
   launch(Deno.args, {
