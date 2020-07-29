@@ -1,24 +1,7 @@
 import { Logger } from "https://deno.land/x/deno_util/logger.ts"
-import * as path from "https://deno.land/std/path/mod.ts"
-import { existsSync } from "https://deno.land/std/fs/mod.ts"
-
-import { ConfigStructure } from './interface.ts'
 
 export const VERSION = '0.0.1'
-
 export const logger = new Logger()
-
-export async function getConfig(): Promise<ConfigStructure> {
-  // @ts-ignore
-  let config = {
-    commandDir: 'src/commands'
-  }
-  // Deno.chdir(Deno.cwd())
-  // if (existsSync(path.resolve('./.denoshrc.ts'))) {
-  //   config = await import('file://' + path.resolve('./.denoshrc.ts'))
-  // }
-  return config
-}
 
 export const parseCommandName = (commandName: string, target: string) => {
   commandName = commandName.replace(/\s{2,}/g, ' ')

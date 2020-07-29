@@ -1,25 +1,65 @@
 import * as path from "https://deno.land/std/path/mod.ts"
-
-import { CommandsStructure } from './interface.ts'
+import { parse } from "https://deno.land/std/flags/mod.ts"
+import { CommandsStructure, LaunchOptionStructure } from './interface.ts'
 import { OptionManger } from './option.ts'
 import * as Utils from './utils.ts'
 
 import * as generateCommand from '../commands/generate.ts'
 
+export async function launch(args: string[], opts: LaunchOptionStructure = {}) {
+  // Process options
+  const argv = parse(args)
+  let {
+    _: [ commandName ]
+  } = argv
+
+  const loadedCommands = await loadCoreCommands()
+  await loadExtraCommands(loadedCommands, opts)
+  
+  if (!commandName) {
+    commandName = 'help'
+  }
+
+  if (argv.version || argv.v || commandName === 'version') {
+    showVersion()
+    return
+  }
+
+  if (argv.help || argv.h || commandName === 'help') {
+    showHelp(loadedCommands, <string>commandName, opts);
+    return
+  }
+
+  if (loadedCommands[commandName]) {
+    try {
+      const command = loadedCommands[commandName]
+      const parsed = Utils.parseCommandName(command.name, argv._.join(' '))
+
+      // @ts-ignore
+      if (command.handler) {
+        await command.handler(Object.assign({}, parsed, argv, opts))
+      }
+    } catch (e) {
+      Utils.logger.error(e.message)
+    }
+  } else {
+    Utils.logger.error('Command not found')
+    Deno.exit(1)
+  }
+}
+
 export function showVersion() {
   Utils.logger.info(Utils.VERSION)
 }
 
-export async function loadExtraCommands(loadedCommands: CommandsStructure) {
-  const config = await Utils.getConfig()
-
-  if (!config.commandDir) {
+export async function loadExtraCommands(loadedCommands: CommandsStructure, opts: LaunchOptionStructure) {
+  if (!opts.commandDir) {
     return
   }
 
   const __dirname = path.dirname(path.fromFileUrl(import.meta.url))
   const coreCommandsDir: string = path.resolve(__dirname, '../commands')
-  const commandsDir: string = path.resolve(Deno.cwd(), config.commandDir)
+  const commandsDir: string = path.resolve(Deno.cwd(), opts.commandDir)
 
   if (coreCommandsDir === commandsDir) {
     return
@@ -41,13 +81,13 @@ export async function loadExtraCommands(loadedCommands: CommandsStructure) {
 export async function loadCoreCommands(): Promise<CommandsStructure> {
   // Loaded all commands
   const loadedCommands: CommandsStructure = {}
-  loadedCommands.version = {
-    name: 'version',
-    desc: 'Show version',
-  }
   loadedCommands.help = {
     name: 'help',
     desc: 'Show help',
+  }
+  loadedCommands.version = {
+    name: 'version',
+    desc: 'Show version',
   }
 
   loadedCommands.generate = generateCommand
@@ -55,8 +95,8 @@ export async function loadCoreCommands(): Promise<CommandsStructure> {
   return loadedCommands
 }
 
-export function showHelp(commandName: string, loadedCommands : CommandsStructure) {
-  const scriptName = 'denosh'
+export function showHelp(loadedCommands : CommandsStructure, commandName: string, opts: LaunchOptionStructure = {}) {
+  const scriptName = opts.scriptName ? opts.scriptName : 'denosh'
   if (commandName === 'help') {
 
     Utils.logger.info(`${scriptName} [command]`)
