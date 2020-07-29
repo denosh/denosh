@@ -23,12 +23,23 @@ import { launch, registerCommand } from 'https://raw.githubusercontent.com/denos
 import * as test1Command from './src/commands/test1.ts'
 import * as test2Command from './src/commands/test2.ts'
 
+registerCommand('test1', test1Command)
+registerCommand('test2', test2Command)
+
 if (import.meta.main) {
   launch(Deno.args, {
     scriptName: 'Your script name',
     commandDir: 'Command directory'
   })
 }
+```
+
+## Add a command using generator
+
+There is a built in command, called generate, it's very easy to generate a simple command structure, it use the `commandDir` in launch option to know where to write the command.
+
+```
+deno run cli.ts test3
 ```
 
 ## Command structure
@@ -46,6 +57,12 @@ export const handler = async (argv: any) => {
   console.log('Hello world!')
 }
 ```
+
+## Dynamicly register commands
+
+As I tried, I can not provide the api in my mod, because deno prevent dynamicly import module out of a mod, so you need to create the dynamicly import and register api in your mod.
+
+I will give a example code about this later.
 
 ## License
 
