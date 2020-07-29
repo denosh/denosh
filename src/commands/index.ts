@@ -1,1 +1,1 @@
-export * as generate from './generate.ts'
+export * as generate from "./generate.ts";

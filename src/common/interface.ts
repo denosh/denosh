@@ -1,65 +1,69 @@
 export type OptionStructure = {
   /** Option description */
-  desc: string
+  desc: string;
 
   /** Option alias, not working for now */
-  alias?: string
+  alias?: string;
 
   /** Option default value, not working for now */
-  default?: string
-}
+  default?: string;
+};
 
 export type OptionsStructure = {
-  [key: string]: OptionStructure
-}
+  [key: string]: OptionStructure;
+};
 
 export interface OptionMangerInterface {
   /** Set option */
-  set(key: string, value: OptionStructure): void
+  set(key: string, value: OptionStructure): void;
 
   /** Get option */
-  get(key: string): OptionStructure
+  get(key: string): OptionStructure;
 
   /** Get all options */
-  all(): OptionsStructure
+  all(): OptionsStructure;
 
   /** Get all keys of options */
-  keys(): string[]
+  keys(): string[];
 }
 
 export type CommandStructure = {
   /** Command name */
-  name: string
+  name: string;
 
   /** Command description */
-  desc: string
+  desc: string;
 
   /** Command option builder */
-  builder?(option: OptionMangerInterface): void
+  builder?(option: OptionMangerInterface): void;
 
   /** Command handler */
-  handler?(argv: NormalArgvStructure): void
+  handler?(argv: NormalArgvStructure): void;
 
   /** alias, for now it's not working */
-  aliases?: string | string[]
-}
+  aliases?: string | string[];
+};
 
 export type CommandsStructure = {
-  [key: string]: CommandStructure
-}
+  [key: string]: CommandStructure;
+};
 
 export type ConfigStructure = {
-  [key: string]: any
-}
+  [key: string]: string | number | boolean | undefined;
+};
+
+export type MatchStructure = {
+  [key: string]: string | number | boolean | undefined;
+};
 
 export type NormalArgvStructure = {
-  [key: string]: any
-}
+  [key: string]: string | number | boolean | undefined;
+};
 
 export type LaunchOptionStructure = {
   /** entry script name, used in showing help info */
-  scriptName?: string
+  scriptName?: string;
 
   /** Extra Commands Directory */
-  commandDir?: string
-}
+  commandDir?: string;
+};

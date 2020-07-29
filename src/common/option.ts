@@ -1,24 +1,27 @@
-import { OptionMangerInterface, OptionStructure, OptionsStructure } from './interface.ts'
+import {
+  OptionMangerInterface,
+  OptionStructure,
+  OptionsStructure,
+} from "./interface.ts";
 
 export class OptionManger implements OptionMangerInterface {
-  mapping: OptionsStructure = {}
+  mapping: OptionsStructure = {};
 
   constructor() {}
 
   set(key: string, value: OptionStructure) {
-    this.mapping[key] = value
+    this.mapping[key] = value;
   }
 
   get(key: string): OptionStructure {
-    return this.mapping[key]
+    return this.mapping[key];
   }
 
   all(): OptionsStructure {
-    return this.mapping
+    return this.mapping;
   }
 
   keys(): string[] {
-    return Object.keys(this.mapping) || []
+    return Object.keys(this.mapping) || [];
   }
-
 }
