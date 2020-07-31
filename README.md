@@ -20,7 +20,7 @@ deno install --allow-read --allow-write -f -n denosh https://raw.githubuserconte
 import { launch, registerCommand } from 'https://raw.githubusercontent.com/denosh/denosh/master/mod.ts'
 
 import * as test1Command from './src/commands/test1.ts'
-import * as test2Command from './src/commands/test2.ts'
+import * as **test2Command** from './src/commands/test2.ts'
 
 registerCommand('test1', test1Command)
 registerCommand('test2', test2Command)
@@ -59,9 +59,28 @@ export const handler = async (argv: any) => {
 
 ## Dynamicly register commands
 
-As I tried, I can not provide the api in my mod, because deno prevent dynamicly import module out of a mod, so you need to create the dynamicly import and register api in your mod.
+As I tried, I can not provide the api in my mod, because Deno prevent dynamicly import module out of a mod, so you need to create the dynamicly import and register api in your mod.
 
-I will give a example code about this later.
+I write an example code about this below, feel free to change in your way:
+
+```js
+async function dynamicRegister() {
+  const commandsDir = 'src/commands'
+  const scannedCommands = []
+  for (let entry of Deno.readDirSync(commandsDir)) {
+    if (entry.isFile && path.extname(entry.name) == '.ts') {
+      scannedCommands.push(entry)
+    }
+  }
+
+  for (let entry of scannedCommands) {
+    const command = await import(path.resolve(commandsDir, entry.name))
+    registerCommand(path.basename(entry.name, '.ts'), command)
+  }
+}
+
+await dynamicRegister()
+```
 
 ## License
 
