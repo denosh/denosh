@@ -57,7 +57,7 @@ export async function launch(args: string[], opts: LaunchOptionStructure = {}) {
     return;
   }
 
-  if (argv.help || argv.h || commandName === "help") {
+  if (argv.help || argv.h || argv._[argv._.length - 1] === "help") {
     showHelp(loadedCommands, <string> commandName, opts);
     return;
   }
