@@ -3,6 +3,7 @@ import {
   CommandsStructure,
   LaunchOptionStructure,
   CommandStructure,
+  AliasCommandMapping,
 } from "./interface.ts";
 import { OptionManger } from "./option.ts";
 import * as Utils from "./utils.ts";
@@ -28,8 +29,27 @@ export async function launch(args: string[], opts: LaunchOptionStructure = {}) {
   const loadedCommands = await loadCoreCommands();
   await loadExtraCommands(loadedCommands, opts);
 
+  // Process command alias
+  const aliases: AliasCommandMapping = {};
+  Object.keys(loadedCommands).forEach((command) => {
+    if (Array.isArray(loadedCommands[command].aliases)) {
+      let commandAlias = <string[]> loadedCommands[command].aliases;
+      commandAlias.forEach((alias) => {
+        aliases[alias] = command;
+      });
+    } else if (loadedCommands[command].aliases) {
+      aliases[<string> loadedCommands[command].aliases] = command;
+    }
+  });
+
   if (!commandName) {
     commandName = "help";
+  }
+
+  // Transfar alias to full command name
+  if (aliases[commandName]) {
+    commandName = aliases[commandName];
+    argv._[0] = commandName;
   }
 
   if (argv.version || argv.v || commandName === "version") {
@@ -106,6 +126,16 @@ export function showHelp(
         let commandText = `  ${scriptName} ${command.name}`;
         if (command.desc) {
           commandText = commandText.padEnd(40, " ") + command.desc;
+        }
+
+        const aliases = Array.isArray(command.aliases)
+          ? command.aliases
+          : command.aliases
+          ? [command.aliases]
+          : [];
+        if (aliases.length > 0) {
+          commandText = commandText.padEnd(80, " ") + "[alias: " +
+            aliases.join(", ") + "]";
         }
         Utils.logger.info(commandText);
       });

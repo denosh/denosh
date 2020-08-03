@@ -3,6 +3,7 @@ import { OptionMangerInterface } from "../common/interface.ts";
 
 export const name = "generate <name> [desc]";
 export const desc = "Generate command";
+export const aliases = "g";
 
 type Argv = {
   name: string;

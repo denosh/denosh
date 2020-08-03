@@ -45,7 +45,7 @@ export type CommandStructure = {
 };
 
 export type CommandsStructure = {
-  [key: string]: CommandStructure;
+  [key: string]: Writable<CommandStructure>;
 };
 
 export type ConfigStructure = {
@@ -60,10 +60,22 @@ export type NormalArgvStructure = {
   [key: string]: string | number | boolean | undefined;
 };
 
+export type AliasCommandMapping = {
+  [key: string]: string;
+};
+
+export type NormalObjectStructure = {
+  [key: string]: string | number | boolean | undefined;
+};
+
 export type LaunchOptionStructure = {
   /** entry script name, used in showing help info */
   scriptName?: string;
 
   /** Extra Commands Directory */
   commandDir?: string;
+};
+
+export type Writable<T> = {
+  -readonly [K in keyof T]: T[K];
 };
