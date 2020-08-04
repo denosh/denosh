@@ -64,6 +64,11 @@ export type AliasCommandMapping = {
   [key: string]: string;
 };
 
+export type AliasOptionMapping = {
+  [key: string]: string;
+};
+
+
 export type NormalObjectStructure = {
   [key: string]: string | number | boolean | undefined;
 };

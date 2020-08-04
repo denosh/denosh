@@ -1,7 +1,7 @@
 import { Logger } from "https://deno.land/x/deno_util/logger.ts";
 import { MatchStructure } from "./interface.ts";
 
-export const VERSION = "0.0.1";
+export const VERSION = "0.0.2";
 export const logger = new Logger();
 
 export const parseCommandName = (commandName: string, target: string) => {

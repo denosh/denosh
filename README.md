@@ -5,7 +5,7 @@ Denosh is a command line tool solution for Deno.
 ## Installation
 
 ```bash
-deno install --allow-read --allow-write -f -n denosh https://raw.githubusercontent.com/denosh/denosh/master/denosh.ts
+deno install --allow-read --allow-write -f -n denosh https://deno.land/x/denosh/denosh.ts
 ```
 
 ***Cation: If you choose to use this way, you can just use bulltin commands, and it's not that useful** 
@@ -17,7 +17,7 @@ deno install --allow-read --allow-write -f -n denosh https://raw.githubuserconte
 ## As a mod
 
 ```js
-import { launch, registerCommand } from 'https://raw.githubusercontent.com/denosh/denosh/master/mod.ts'
+import { launch, registerCommand } from 'https://deno.land/x/denosh/mod.ts'
 
 import * as test1Command from './src/commands/test1.ts'
 import * as **test2Command** from './src/commands/test2.ts'
