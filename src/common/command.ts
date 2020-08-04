@@ -70,18 +70,18 @@ export async function launch(args: string[], opts: LaunchOptionStructure = {}) {
       // Process option alias
       const optionManger = new OptionManger();
       command.builder && command.builder(optionManger);
-      const optionsAliasMapping: AliasOptionMapping = {}
-      optionManger.keys().forEach(key => {
-        const option = optionManger.get(key)
+      const optionsAliasMapping: AliasOptionMapping = {};
+      optionManger.keys().forEach((key) => {
+        const option = optionManger.get(key);
         if (option.alias) {
-          optionsAliasMapping[option.alias] = key
+          optionsAliasMapping[option.alias] = key;
         }
-      })
+      });
 
       for (let argKey in argv) {
-        if (argKey === '_') continue
+        if (argKey === "_") continue;
         if (optionsAliasMapping[argKey]) {
-          argv[optionsAliasMapping[argKey]] = argv[argKey]
+          argv[optionsAliasMapping[argKey]] = argv[argKey];
         }
       }
 
