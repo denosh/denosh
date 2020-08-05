@@ -1,3 +1,4 @@
+import * as path from "https://deno.land/std/path/mod.ts";
 import { parse } from "https://deno.land/std/flags/mod.ts";
 import {
   CommandsStructure,
@@ -9,9 +10,21 @@ import {
 import { OptionManger } from "./option.ts";
 import * as Utils from "./utils.ts";
 
-import * as generateCommand from "../commands/generate.ts";
-
 const commands: CommandsStructure = {};
+
+async function dynamicRegister(commandsDir: string) {
+  const scannedCommands = [];
+  for (let entry of Deno.readDirSync(commandsDir)) {
+    if (entry.isFile && path.extname(entry.name) == ".ts") {
+      scannedCommands.push(entry);
+    }
+  }
+
+  for (let entry of scannedCommands) {
+    const command = await import(path.resolve(commandsDir, entry.name));
+    registerCommand(path.basename(entry.name, ".ts"), command);
+  }
+}
 
 export function registerCommand(
   commandName: string,
@@ -28,7 +41,7 @@ export async function launch(args: string[], opts: LaunchOptionStructure = {}) {
   } = argv;
 
   const loadedCommands = await loadCoreCommands();
-  await loadExtraCommands(loadedCommands, opts);
+  await loadMoreCommands(loadedCommands, opts);
 
   // Process command alias
   const aliases: AliasCommandMapping = {};
@@ -76,6 +89,10 @@ export async function launch(args: string[], opts: LaunchOptionStructure = {}) {
         if (option.alias) {
           optionsAliasMapping[option.alias] = key;
         }
+
+        if (!argv[key] && option.default) {
+          argv[key] = option.default;
+        }
       });
 
       for (let argKey in argv) {
@@ -103,7 +120,7 @@ export function showVersion() {
   Utils.logger.info(Utils.VERSION);
 }
 
-export async function loadExtraCommands(
+export async function loadMoreCommands(
   loadedCommands: CommandsStructure,
   opts: LaunchOptionStructure,
 ) {
@@ -113,7 +130,7 @@ export async function loadExtraCommands(
 }
 
 export async function loadCoreCommands(): Promise<CommandsStructure> {
-  // Loaded all commands
+  // Loaded fake commands
   const loadedCommands: CommandsStructure = {};
   loadedCommands.help = {
     name: "help",
@@ -124,7 +141,8 @@ export async function loadCoreCommands(): Promise<CommandsStructure> {
     desc: "Show version",
   };
 
-  loadedCommands.generate = generateCommand;
+  // Load core commands
+  await dynamicRegister(path.resolve(Deno.cwd(), "src/commands"));
 
   return loadedCommands;
 }
