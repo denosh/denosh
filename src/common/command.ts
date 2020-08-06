@@ -142,7 +142,8 @@ export async function loadCoreCommands(): Promise<CommandsStructure> {
   };
 
   // Load core commands
-  await dynamicRegister(path.resolve(Deno.cwd(), "src/commands"));
+  const __dirname = new URL('.', import.meta.url).pathname;
+  await dynamicRegister(path.resolve(__dirname, "../commands"));
 
   return loadedCommands;
 }
