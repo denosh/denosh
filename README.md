@@ -28,7 +28,8 @@ registerCommand('test2', test2Command)
 if (import.meta.main) {
   launch(Deno.args, {
     scriptName: 'Your script name',
-    commandDir: 'Command directory'
+    commandDir: 'Command directory',
+    exclude: ['generate'] // disable registered commands
   })
 }
 ```
