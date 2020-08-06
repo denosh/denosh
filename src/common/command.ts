@@ -10,6 +10,8 @@ import {
 import { OptionManger } from "./option.ts";
 import * as Utils from "./utils.ts";
 
+import * as generateCommand from "../commands/generate.ts";
+
 const commands: CommandsStructure = {};
 
 async function dynamicRegister(commandsDir: string) {
@@ -40,8 +42,8 @@ export async function launch(args: string[], opts: LaunchOptionStructure = {}) {
     _: [commandName],
   } = argv;
 
-  const loadedCommands = await loadCoreCommands();
-  await loadMoreCommands(loadedCommands, opts);
+  let loadedCommands = await loadCoreCommands();
+  loadedCommands = await loadMoreCommands(loadedCommands, opts);
 
   // Process command alias
   const aliases: AliasCommandMapping = {};
@@ -123,10 +125,22 @@ export function showVersion() {
 export async function loadMoreCommands(
   loadedCommands: CommandsStructure,
   opts: LaunchOptionStructure,
-) {
+): Promise<CommandsStructure> {
   Object.keys(commands).forEach((command) => {
     loadedCommands[command] = commands[command];
   });
+
+  if (opts.exclude && opts.exclude.length > 0) {
+    const filteredCommands: CommandsStructure = {};
+    Object.keys(loadedCommands).forEach((command) => {
+      if (opts.exclude && !opts.exclude.includes(command)) {
+        filteredCommands[command] = loadedCommands[command];
+      }
+    });
+    loadedCommands = filteredCommands;
+  }
+
+  return loadedCommands;
 }
 
 export async function loadCoreCommands(): Promise<CommandsStructure> {
@@ -142,8 +156,7 @@ export async function loadCoreCommands(): Promise<CommandsStructure> {
   };
 
   // Load core commands
-  const __dirname = new URL('.', import.meta.url).pathname;
-  await dynamicRegister(path.resolve(__dirname, "../commands"));
+  registerCommand("generate", generateCommand);
 
   return loadedCommands;
 }

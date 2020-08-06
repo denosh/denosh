@@ -78,6 +78,9 @@ export type LaunchOptionStructure = {
 
   /** Extra Commands Directory */
   commandDir?: string;
+
+  /** Exclude/Disable some definded commands*/
+  exclude?: string[];
 };
 
 export type Writable<T> = {
