@@ -1,5 +1,5 @@
 import * as path from "https://deno.land/std/path/mod.ts";
-import { OptionMangerInterface } from "../common/interface.ts";
+import { OptionManagerInterface } from "../common/interface.ts";
 
 export const name = "generate <name> [desc]";
 export const desc = "Generate command";
@@ -11,7 +11,7 @@ type Argv = {
   commandDir?: string;
 };
 
-export const builder = (option: OptionMangerInterface) => {};
+export const builder = (option: OptionManagerInterface) => {};
 
 export const handler = async (argv: Argv) => {
   if (!argv.commandDir) {

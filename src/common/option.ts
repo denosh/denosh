@@ -1,10 +1,10 @@
 import {
-  OptionMangerInterface,
+  OptionManagerInterface,
   OptionStructure,
   OptionsStructure,
 } from "./interface.ts";
 
-export class OptionManger implements OptionMangerInterface {
+export class OptionManager implements OptionManagerInterface {
   mapping: OptionsStructure = {};
 
   constructor() {}

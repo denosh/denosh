@@ -7,7 +7,7 @@ import {
   AliasCommandMapping,
   AliasOptionMapping,
 } from "./interface.ts";
-import { OptionManger } from "./option.ts";
+import { OptionManager } from "./option.ts";
 import * as Utils from "./utils.ts";
 
 import * as generateCommand from "../commands/generate.ts";
@@ -83,11 +83,11 @@ export async function launch(args: string[], opts: LaunchOptionStructure = {}) {
       const command = loadedCommands[commandName];
 
       // Process option alias
-      const optionManger = new OptionManger();
-      command.builder && command.builder(optionManger);
+      const optionManager = new OptionManager();
+      command.builder && command.builder(optionManager);
       const optionsAliasMapping: AliasOptionMapping = {};
-      optionManger.keys().forEach((key) => {
-        const option = optionManger.get(key);
+      optionManager.keys().forEach((key) => {
+        const option = optionManager.get(key);
         if (option.alias) {
           optionsAliasMapping[option.alias] = key;
         }
@@ -205,15 +205,15 @@ export function showHelp(
       console.log();
       Utils.logger.info(command.desc);
 
-      const optionManger = new OptionManger();
-      command.builder && command.builder(optionManger);
+      const optionManager = new OptionManager();
+      command.builder && command.builder(optionManager);
 
-      if (optionManger.keys().length > 0) {
+      if (optionManager.keys().length > 0) {
         console.log();
         Utils.logger.info("Options:");
 
-        optionManger.keys().forEach((key) => {
-          const option = optionManger.get(key);
+        optionManager.keys().forEach((key) => {
+          const option = optionManager.get(key);
           const options = [key];
           if (option.alias) {
             options.push(option.alias);

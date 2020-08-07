@@ -13,7 +13,7 @@ export type OptionsStructure = {
   [key: string]: OptionStructure;
 };
 
-export interface OptionMangerInterface {
+export interface OptionManagerInterface {
   /** Set option */
   set(key: string, value: OptionStructure): void;
 
@@ -35,7 +35,7 @@ export type CommandStructure = {
   desc: string;
 
   /** Command option builder */
-  builder?(option: OptionMangerInterface): void;
+  builder?(option: OptionManagerInterface): void;
 
   /** Command handler */
   handler?(argv: NormalArgvStructure): void;
